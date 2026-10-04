@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-
 public class planeMovementPath : MonoBehaviour
 {
 
@@ -26,6 +25,7 @@ public class planeMovementPath : MonoBehaviour
         resetPlane();
     }
 
+    // also called in gamemanager before each round, so that's why this method exists
     public void resetPlane()
     {
         transform.position = startPosition;
@@ -55,7 +55,6 @@ public class planeMovementPath : MonoBehaviour
             // set up bezier curve
             float inverseT = 1f - smoothT;
             transform.position = (Mathf.Pow(inverseT, 2) * start) + (2 * smoothT * inverseT * ctrlPt) + (Mathf.Pow(smoothT, 2) * end);
-
             if (smoothT < .5f)
             {
                 transform.rotation = Quaternion.Slerp(startRot, midRot, smoothT * 2);
@@ -68,11 +67,5 @@ public class planeMovementPath : MonoBehaviour
         }
         transform.position = end;
         transform.rotation = endRot;
-    }
-
-    public void movePlane()
-    {
-        Debug.Log("plane is going to move");
-
     }
 }

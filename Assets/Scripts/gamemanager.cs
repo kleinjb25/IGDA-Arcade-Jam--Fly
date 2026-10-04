@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Threading;
 using UnityEngine;
+using TMPro;
 
 public class gamemanager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class gamemanager : MonoBehaviour
     public planeMovementPath pmp;
     public bool roundActive;
     public float timeRemaining;
+
+    public TextMeshProUGUI ttogText;
+    public TextMeshProUGUI timerText;
 
     private void Awake()
     {
@@ -28,6 +32,8 @@ public class gamemanager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        ttogText.text = "";
+        timerText.text = "";
         if (pmp == null)
         {
             Debug.LogError("no plane reference? :(");
@@ -40,7 +46,7 @@ public class gamemanager : MonoBehaviour
     // wait for 1/3 buffer while playing plane animation and 3 2 1 go, then start round. after roundtimer is done, start buffer timer and play animation of plane flying off (and either crashing and exploding, or flying 'into the sunset'). repeat totalRounds times, incrementing roundNumber each time.
     private IEnumerator GameLoop()
     {
-        for (roundNumber = 1; roundNumber < totalRounds; roundNumber++)
+        for (roundNumber = 1; roundNumber <= totalRounds; roundNumber++)
         {
             Debug.Log("starting round " + roundNumber);
             pmp.resetPlane();
@@ -49,20 +55,24 @@ public class gamemanager : MonoBehaviour
             yield return inspection();
             roundActive = false;
             Debug.Log("round" + roundNumber + "done");
+            // TODO: show current scores during buffer
             yield return new WaitForSeconds(buffer);
             yield return pmp.depart();
             yield return new WaitForSeconds(buffer);
         }
+        // TODO: show final scores and go to main menu
     }
 
     private IEnumerator ttog()
     {
         for (int i = 3; i > 0; i--)
         {
-            Debug.Log(i);
-            yield return new WaitForSeconds(1f);
+            ttogText.text = "Find what's wrong with the plane!\n" + i;
+            yield return new WaitForSeconds(1);
         }
-        Debug.Log("GO!");
+        ttogText.text = "Find what's wrong with the plane!\nGO!";
+        yield return new WaitForSeconds(.75f);
+        ttogText.text = "";
     }
 
     private IEnumerator inspection()
@@ -71,10 +81,13 @@ public class gamemanager : MonoBehaviour
         roundActive = true;
         while (timeRemaining > 0)
         {
+            //TODO: set up clicking on parts of the plane, checking if it's right, and scoring
             timeRemaining -= Time.deltaTime;
             timeRemaining = Mathf.Max(0, timeRemaining);
+            timerText.text = $"{timeRemaining:F0}";
             yield return null;
         }
+        timerText.text = "";
         roundActive = false;
     }
 }

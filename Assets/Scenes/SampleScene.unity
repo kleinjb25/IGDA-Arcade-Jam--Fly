@@ -1686,13 +1686,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f7ffe7089c180141be4081c5ff9fe83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  roundTimer: 30
-  animLength: 5
-  buffer: 5
+  roundTimer: 2
+  animLength: 7
+  buffer: 1
   roundNumber: 1
   pmp: {fileID: 1126147280}
   roundActive: 0
   timeRemaining: 0
+  ttogText: {fileID: 130142819}
+  timerText: {fileID: 1215778522}
 --- !u!4 &2140983269
 Transform:
   m_ObjectHideFlags: 0
