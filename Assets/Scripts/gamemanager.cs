@@ -15,7 +15,8 @@ public class gamemanager : MonoBehaviour
     public float timeRemaining;
 
     public TextMeshProUGUI ttogText;
-    public TextMeshProUGUI timerText;
+    public TextMeshProUGUI timerP1Text;
+    public TextMeshProUGUI timerP2Text;
 
     private void Awake()
     {
@@ -29,11 +30,11 @@ public class gamemanager : MonoBehaviour
             Destroy(gameObject);
         }
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         ttogText.text = "";
-        timerText.text = "";
+        timerP1Text.text = "";
+        timerP2Text.text = "";
         if (pmp == null)
         {
             Debug.LogError("no plane reference? :(");
@@ -84,10 +85,12 @@ public class gamemanager : MonoBehaviour
             //TODO: set up clicking on parts of the plane, checking if it's right, and scoring
             timeRemaining -= Time.deltaTime;
             timeRemaining = Mathf.Max(0, timeRemaining);
-            timerText.text = $"{timeRemaining:F0}";
+            timerP1Text.text = $"{timeRemaining:F0} seconds left!";
+            timerP2Text.text = $"{timeRemaining:F0} seconds left!";
             yield return null;
         }
-        timerText.text = "";
+        timerP1Text.text = "";
+        timerP2Text.text = "";
         roundActive = false;
     }
 }
