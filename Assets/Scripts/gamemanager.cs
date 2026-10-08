@@ -18,6 +18,8 @@ public class gamemanager : MonoBehaviour
     public TextMeshProUGUI timerP1Text;
     public TextMeshProUGUI timerP2Text;
 
+    public problemSpot[] spots;
+
     private void Awake()
     {
         if (instance == null)
@@ -50,11 +52,13 @@ public class gamemanager : MonoBehaviour
         for (roundNumber = 1; roundNumber <= totalRounds; roundNumber++)
         {
             Debug.Log("starting round " + roundNumber);
+            resetProblemSpots();
             pmp.resetPlane();
             yield return pmp.arrive();
             yield return ttog();
             yield return inspection();
             roundActive = false;
+            revealResults();
             Debug.Log("round" + roundNumber + "done");
             // TODO: show current scores during buffer
             yield return new WaitForSeconds(buffer);
@@ -80,6 +84,7 @@ public class gamemanager : MonoBehaviour
     {
         timeRemaining = roundTimer;
         roundActive = true;
+        enableProblemSpots();
         while (timeRemaining > 0)
         {
             //TODO: set up clicking on parts of the plane, checking if it's right, and scoring
@@ -92,5 +97,33 @@ public class gamemanager : MonoBehaviour
         timerP1Text.text = "";
         timerP2Text.text = "";
         roundActive = false;
+    }
+
+    private void enableProblemSpots()
+    {
+        foreach(problemSpot p in spots)
+        {
+            if (p != null) p.SetInteractable(true);
+        }
+    }
+
+    private void revealResults()
+    {
+        foreach (problemSpot p in spots)
+        {
+            if (p != null) p.revealResult();
+        }
+    }
+
+    private void resetProblemSpots()
+    {
+        foreach(problemSpot p in spots)
+        {
+            if (p != null)
+            {
+                p.gameObject.SetActive(true);
+                p.resetSpot();
+            }
+        }
     }
 }

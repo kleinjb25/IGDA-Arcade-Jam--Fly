@@ -7,6 +7,7 @@ public class playerCursor : MonoBehaviour
     public RectTransform cursor;
     public Camera gameCamera;
     public float cursorSpeed = 420;
+    [SerializeField] private int pNum;
 
     private Vector2 moveInput;
     void Update()
@@ -22,7 +23,7 @@ public class playerCursor : MonoBehaviour
     {
         if (!context.performed)
             return;
-
+        Debug.Log("select has been pushed");
         clickWithCursor();
     }
 
@@ -36,9 +37,16 @@ public class playerCursor : MonoBehaviour
     {
         Vector2 screenPos = RectTransformUtility.WorldToScreenPoint(null, cursor.position);
         Ray r = gameCamera.ScreenPointToRay(screenPos);
-        if (Physics.Raycast(r, out RaycastHit h))
+        int layerMask = LayerMask.GetMask("problemSpot");
+        if (Physics.Raycast(r, out RaycastHit h, Mathf.Infinity, layerMask))
         {
-
+            Debug.Log("hit" + h.collider.gameObject.name);
+            problemSpot p = h.collider.GetComponentInParent<problemSpot>();
+            if (p != null)
+            {
+                Debug.Log("found ps");
+                p.select(pNum);
+            }
         }
     }
 }
