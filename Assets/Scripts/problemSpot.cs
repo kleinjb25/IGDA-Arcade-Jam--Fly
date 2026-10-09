@@ -38,6 +38,7 @@ public class problemSpot : MonoBehaviour
 
     public bool select(int playerNum)
     {
+        if (!gamemanager.instance.hasAttemptsLeft(playerNum)) return false;
         if (revealed) return false;
         if (gamemanager.instance == null || !gamemanager.instance.roundActive) return false;
         if (playerNum == 1)

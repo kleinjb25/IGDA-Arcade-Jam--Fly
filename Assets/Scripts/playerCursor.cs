@@ -45,7 +45,7 @@ public class playerCursor : MonoBehaviour
             if (p != null)
             {
                 Debug.Log("found ps");
-                p.select(pNum);
+                if (p.select(pNum)) gamemanager.instance.useAttempt(pNum, p);
             }
         }
     }
