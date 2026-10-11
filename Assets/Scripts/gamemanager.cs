@@ -23,7 +23,6 @@ public class gamemanager : MonoBehaviour
     public TextMeshProUGUI results;
     public GameObject player2UI;
     public playerCursor player2Cursor;
-
     public problemSpot[] spots;
 
     private void Awake()
@@ -121,15 +120,18 @@ public class gamemanager : MonoBehaviour
             roundActive = false;
             revealResults();
             Debug.Log("round" + roundNumber + "done");
-            yield return new WaitForSeconds(buffer);
-            results.gameObject.SetActive(false);
+            yield return new WaitForSeconds(1);
             yield return pmp.depart();
+            results.gameObject.SetActive(false);
             yield return new WaitForSeconds(buffer / 2);
         }
-        results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
+        if (coop) results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
+        else results.text = $"Player 1's final score: {scoreP1} pts";
         results.gameObject.SetActive(true);
         yield return new WaitForSeconds(buffer);
         results.gameObject.SetActive(false);
+        scoreP1 = 0;
+        scoreP2 = 0;
         SceneManager.LoadScene("mainMenu");
     }
 
@@ -166,7 +168,7 @@ public class gamemanager : MonoBehaviour
             yield return new WaitForSeconds(1);
         }
         ttogText.text = "Find what's wrong with the plane!\nGO!";
-        yield return new WaitForSeconds(.75f);
+        yield return new WaitForSeconds(.69f);
         ttogText.text = "";
         ttogText.gameObject.SetActive(false);
     }
@@ -178,6 +180,10 @@ public class gamemanager : MonoBehaviour
         enableProblemSpots();
         while (timeRemaining > 0)
         {
+            if (!hasAttemptsLeft(1))
+            {
+                if (!coop || !hasAttemptsLeft(2)) break;
+            }
             timeRemaining -= Time.deltaTime;
             timeRemaining = Mathf.Max(0, timeRemaining);
             timerP1Text.text = $"{timeRemaining:F0} seconds left!";
