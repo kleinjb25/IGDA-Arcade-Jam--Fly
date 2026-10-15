@@ -257,7 +257,7 @@ public class gamemanager : MonoBehaviour
 
     private void updateAttemptsLeft()
     {
-        problemsLeftP1.text = $"{attemptsP1:F0} / {faults:F0}\nattempts left!";
-        problemsLeftP2.text = $"{attemptsP2:F0} / {faults:F0}\nattempts left!";
+        problemsLeftP1.text = $"{attemptsP1:F0} / {faults:F0}\n";       // October 15 - Patrick removes "attempts left" from these strings in an attempt to
+        problemsLeftP2.text = $"{attemptsP2:F0} / {faults:F0}\n";       // streamline the UI. Shouldn't affect display of the number.
     }
 }
