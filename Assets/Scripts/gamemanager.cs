@@ -19,6 +19,7 @@ public class gamemanager : MonoBehaviour
     public int scoreP1, scoreP2;
     public TextMeshProUGUI ttogText;
     public TextMeshProUGUI timerP1Text, timerP2Text;
+    public TextMeshProUGUI timerP1SubheaderText, timerP2SubheaderText; //October 15 - Added by Patrick as part of a UI rework. I don't know how to connect it to the text box in-scene though, so this is what's breaking the game. (I can connect them in editor while it's running, and it works, so it *should* be an easy fix)
     public TextMeshProUGUI problemsLeftP1, problemsLeftP2;
     public TextMeshProUGUI results;
     public GameObject player2UI;
@@ -164,10 +165,10 @@ public class gamemanager : MonoBehaviour
         ttogText.gameObject.SetActive(true);
         for (int i = 3; i > 0; i--)
         {
-            ttogText.text = "Find what's wrong with the plane!\n" + i;
+            ttogText.text = "Find what's wrong\nwith the plane!\n" + i;
             yield return new WaitForSeconds(1);
         }
-        ttogText.text = "Find what's wrong with the plane!\nGO!";
+        ttogText.text = "Find what's wrong\nwith the plane!\nGO!";
         yield return new WaitForSeconds(.69f);
         ttogText.text = "";
         ttogText.gameObject.SetActive(false);
@@ -186,12 +187,16 @@ public class gamemanager : MonoBehaviour
             }
             timeRemaining -= Time.deltaTime;
             timeRemaining = Mathf.Max(0, timeRemaining);
-            timerP1Text.text = $"{timeRemaining:F0} seconds left!";
-            timerP2Text.text = $"{timeRemaining:F0} seconds left!";
+            timerP1Text.text = $"{timeRemaining:F0}";         // October 15 - Patrick removed the "Seconds left text here, replacing it with a separate subheader box that just"
+            timerP2Text.text = $"{timeRemaining:F0}";         // says "left." Also, I don't know how but is there a way to make the timer show decimal points? (down to hundredth?)
+            timerP1SubheaderText.gameObject.SetActive(true);  // I also added this "Subheader" text box. Added to the code here to see if I can make it appear/dissappear with the
+            timerP2SubheaderText.gameObject.SetActive(true);  // timer text (the reason I want them separate is 'cause I want them to be a different font size)
             yield return null;
         }
         timerP1Text.text = "";
         timerP2Text.text = "";
+        timerP1SubheaderText.gameObject.SetActive(false);
+        timerP2SubheaderText.gameObject.SetActive(false);
         roundActive = false;
     }
 
