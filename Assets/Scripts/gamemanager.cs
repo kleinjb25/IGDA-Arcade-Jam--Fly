@@ -30,7 +30,7 @@ public class gamemanager : MonoBehaviour
     {
         if (instance != null && instance != this)
         {
-            Debug.LogWarning("Duplicate GameManager found; destroying duplicate.");
+            Debug.LogWarning("destroying duplicate gamemanager.");
             Destroy(gameObject);
             return;
         }
@@ -70,6 +70,8 @@ public class gamemanager : MonoBehaviour
         ttogText = refs.ttogText;
         timerP1Text = refs.timerP1Text;
         timerP2Text = refs.timerP2Text;
+        timerP1SubheaderText = refs.timerP1SubheaderText;
+        timerP2SubheaderText = refs.timerP2SubheaderText;
         problemsLeftP1 = refs.problemsLeftP1;
         problemsLeftP2 = refs.problemsLeftP2;
         results = refs.results;
@@ -187,16 +189,18 @@ public class gamemanager : MonoBehaviour
             }
             timeRemaining -= Time.deltaTime;
             timeRemaining = Mathf.Max(0, timeRemaining);
-            timerP1Text.text = $"{timeRemaining:F0}";         // October 15 - Patrick removed the "Seconds left text here, replacing it with a separate subheader box that just"
-            timerP2Text.text = $"{timeRemaining:F0}";         // says "left." Also, I don't know how but is there a way to make the timer show decimal points? (down to hundredth?)
-            timerP1SubheaderText.gameObject.SetActive(true);  // I also added this "Subheader" text box. Added to the code here to see if I can make it appear/dissappear with the
-            timerP2SubheaderText.gameObject.SetActive(true);  // timer text (the reason I want them separate is 'cause I want them to be a different font size)
+            timerP1Text.text = $"{timeRemaining:F2}";         // October 15 - Patrick removed the "Seconds left text here, replacing it with a separate subheader box that just"
+            timerP2Text.text = $"{timeRemaining:F2}";         // says "left." Also, I don't know how but is there a way to make the timer show decimal points? (down to hundredth?)
+            //timerP1SubheaderText.gameObject.SetActive(true);  // I also added this "Subheader" text box. Added to the code here to see if I can make it appear/dissappear with the
+            //timerP2SubheaderText.gameObject.SetActive(true);  // timer text (the reason I want them separate is 'cause I want them to be a different font size)
+            timerP1SubheaderText.text = "seconds left!";
+            timerP2SubheaderText.text = "seconds left!";
             yield return null;
         }
         timerP1Text.text = "";
         timerP2Text.text = "";
-        timerP1SubheaderText.gameObject.SetActive(false);
-        timerP2SubheaderText.gameObject.SetActive(false);
+        timerP1SubheaderText.text = "";
+        timerP2SubheaderText.text = "";
         roundActive = false;
     }
 
