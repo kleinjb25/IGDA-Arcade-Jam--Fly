@@ -4,6 +4,7 @@ using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using static UnityEditorInternal.ReorderableList;
 
 public class gamemanager : MonoBehaviour
@@ -28,6 +29,7 @@ public class gamemanager : MonoBehaviour
     private planeProperties currentPlane;
     public planeMovementPath pmp;
     public problemSpot[] spots;
+    public GameObject referencePlane;
 
     private void Awake()
     {
@@ -81,6 +83,7 @@ public class gamemanager : MonoBehaviour
         player2UI = refs.player2UI;
         player2Cursor = refs.player2Cursor;
         planes = refs.planes;
+        referencePlane = refs.referencePlane;
         foreach (planeProperties plane in planes)
         {
             if (plane != null) plane.gameObject.SetActive(false);
@@ -162,6 +165,7 @@ public class gamemanager : MonoBehaviour
         }
         currentPlane = availablePlanes[roundNumber - 1];
         currentPlane.gameObject.SetActive(true);
+        referencePlane.GetComponent<Image>().sprite = currentPlane.correctImage;
         pmp = currentPlane.movementScript;
         spots = currentPlane.spots;
         Debug.Log("selected plane: " + currentPlane.gameObject.name);

@@ -1536,16 +1536,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 307995723}
-  m_LocalRotation: {x: -0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1332346053}
+  m_Father: {fileID: 1728800060}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -55, y: 60.80005}
+  m_AnchoredPosition: {x: -90, y: 40.00003}
   m_SizeDelta: {x: 300, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &307995725
@@ -1568,7 +1568,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: 'Correct plane:'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1595,18 +1595,18 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
-  m_characterHorizontalScale: 1
+  m_characterHorizontalScale: -1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -2199,6 +2199,7 @@ MonoBehaviour:
   - {fileID: 224017502}
   - {fileID: 2072911889}
   - {fileID: 193528078}
+  correctImage: {fileID: -7783160006110967282, guid: 621b9fd41411f5a41ba923646f8f2c5d, type: 3}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -2624,6 +2625,7 @@ MonoBehaviour:
   problemsLeftP2: {fileID: 58420465}
   results: {fileID: 1143237845}
   player2UI: {fileID: 895044111}
+  referencePlane: {fileID: 1332346052}
   player2Cursor: {fileID: 1169628624}
   planes:
   - {fileID: 1126147281}
@@ -3795,6 +3797,7 @@ MonoBehaviour:
   - {fileID: 1969003343}
   - {fileID: 1981850414}
   - {fileID: 203745966}
+  correctImage: {fileID: -8828082183483502477, guid: 45c5aa45a90dfdd4c8e1c459eacbaa7a, type: 3}
 --- !u!1 &1133624471
 GameObject:
   m_ObjectHideFlags: 0
@@ -4762,18 +4765,16 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1332346052}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 1728800060}
-  - {fileID: 307995724}
-  m_Father: {fileID: 2052045527}
+  m_Children: []
+  m_Father: {fileID: 1728800060}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -25, y: 270}
+  m_AnchoredPosition: {x: 0, y: -20.00003}
   m_SizeDelta: {x: 400, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1332346054
@@ -6050,16 +6051,18 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1728800059}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
   m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1332346053}
+  m_Children:
+  - {fileID: 307995724}
+  - {fileID: 1332346053}
+  m_Father: {fileID: 2052045527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 20}
+  m_AnchoredPosition: {x: -24.999992, y: 319.99997}
   m_SizeDelta: {x: 360, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1728800061
@@ -7015,6 +7018,7 @@ MonoBehaviour:
   - {fileID: 2127362026}
   - {fileID: 1089142696}
   - {fileID: 443155070}
+  correctImage: {fileID: -3857840991679364246, guid: 27951b2a0aa719241932290917f9f174, type: 3}
 --- !u!1 &1969003340
 GameObject:
   m_ObjectHideFlags: 0
@@ -7354,7 +7358,7 @@ RectTransform:
   m_Children:
   - {fileID: 130142818}
   - {fileID: 1143237844}
-  - {fileID: 1332346053}
+  - {fileID: 1728800060}
   - {fileID: 838296417}
   - {fileID: 895044112}
   m_Father: {fileID: 0}

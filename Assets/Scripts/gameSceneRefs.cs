@@ -10,6 +10,7 @@ public class gameSceneRefs : MonoBehaviour
     public TextMeshProUGUI problemsLeftP1, problemsLeftP2;
     public TextMeshProUGUI results;
     public GameObject player2UI;
+    public GameObject referencePlane;
     public playerCursor player2Cursor;
     public planeProperties[] planes;
 }
