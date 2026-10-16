@@ -11,5 +11,5 @@ public class gameSceneRefs : MonoBehaviour
     public TextMeshProUGUI results;
     public GameObject player2UI;
     public playerCursor player2Cursor;
-    public problemSpot[] spots;
+    public planeProperties[] planes;
 }
