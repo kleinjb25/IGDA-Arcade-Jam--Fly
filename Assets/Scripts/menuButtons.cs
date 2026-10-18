@@ -1,14 +1,50 @@
+using TMPro;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class menuButtons : MonoBehaviour
 {
-    public void startGame(GameObject buttonClicked)
+    public TextMeshProUGUI coopLabel;
+    private gamemanager g;
+    int mode;
+
+    public void Start()
     {
-        if (gamemanager.instance == null)
+        g = gamemanager.instance;
+        if (g == null)
         {
             Debug.LogError("no gamemanager? D:");
             return;
         }
-        gamemanager.instance.loadMainGame(buttonClicked);
+        mode = g.coop ? 2 : 1;
+        coopLabel.text = $"Gamemode selected: {mode}P";
+    }
+    public void Update()
+    {
+        if (g == null || Keyboard.current == null) return;
+        if (Keyboard.current.escapeKey.wasPressedThisFrame)
+        {
+            g.coop = false;
+            updateModeLabel();
+        }
+
+        if (Keyboard.current.f11Key.wasPressedThisFrame)
+        {
+            g.coop = true;
+            updateModeLabel();
+        }
+    }
+
+    private void updateModeLabel()
+    {
+        mode = g.coop ? 2 : 1;
+        coopLabel.text = $"Gamemode selected: {mode}P";
+        Debug.Log($"coop is {g.coop}");
+    }
+
+    public void startGame()
+    {
+        if (g != null) g.loadMainGame();
     }
 }

@@ -12,6 +12,10 @@ public class problemSpot : MonoBehaviour
     public bool selectedByP2 => pSelectedByP2; // these 2 lines only allow other scripts to read the state of the var, but don't show it in inspector
     public bool wasSelected => pSelectedByP1 || pSelectedByP2;
 
+    public GameObject fixedPart;
+    public GameObject brokenPart;
+    public bool fixedWhenVisibleOnly;
+
     private void Awake()
     {
         spotCollider = GetComponent<Collider>();
@@ -34,6 +38,13 @@ public class problemSpot : MonoBehaviour
     {
         if (spotCollider != null) spotCollider.enabled = interactable && !revealed;
         if (greenCircle != null) greenCircle.SetActive(interactable && !revealed);
+    }
+
+    public void setFaulty(bool faulty)
+    {
+        isFaulty = faulty;
+        if (fixedPart != null) fixedPart.SetActive(fixedWhenVisibleOnly ? !faulty : !faulty);
+        if (brokenPart != null) brokenPart.SetActive(faulty);
     }
 
     public bool select(int playerNum)

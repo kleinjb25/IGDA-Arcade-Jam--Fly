@@ -1,30 +1,34 @@
+using NUnit.Framework.Constraints;
 using System.Collections;
 using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using static UnityEditorInternal.ReorderableList;
 
 public class gamemanager : MonoBehaviour
 {
-    public bool coop = true;
+    public bool coop;
     public static gamemanager instance { get; private set; }
     public float roundTimer = 10f, animLength = 5f, buffer = 5f;
     public byte roundNumber = 1, faults;
-    public const byte totalRounds = 3;
-    public planeMovementPath pmp;
+    public byte totalRounds;
     public bool roundActive;
     public float timeRemaining;
     public int attemptsP1, attemptsP2;
     public int scoreP1, scoreP2;
     public TextMeshProUGUI ttogText;
     public TextMeshProUGUI timerP1Text, timerP2Text;
-    public TextMeshProUGUI timerP1SubheaderText, timerP2SubheaderText; //October 15 - Added by Patrick as part of a UI rework. I don't know how to connect it to the text box in-scene though, so this is what's breaking the game. (I can connect them in editor while it's running, and it works, so it *should* be an easy fix)
+    public TextMeshProUGUI timerP1SubheaderText, timerP2SubheaderText; //October 15 - Added by Patrick as part of a UI rework.
     public TextMeshProUGUI problemsLeftP1, problemsLeftP2;
     public TextMeshProUGUI results;
     public GameObject player2UI;
     public playerCursor player2Cursor;
+    public planeProperties[] planes;
+    private planeProperties currentPlane;
     public problemSpot[] spots;
+    public GameObject referencePlane;
 
     private void Awake()
     {
@@ -49,10 +53,8 @@ public class gamemanager : MonoBehaviour
             instance = null;
     }
 
-    public void loadMainGame(GameObject buttonClicked)
-    {
-        coop = buttonClicked.name == "p2";
-        Debug.Log($"coop is {coop}");
+    public void loadMainGame()
+    {       
         SceneManager.LoadScene("mainGame");
     }
 
@@ -65,8 +67,6 @@ public class gamemanager : MonoBehaviour
     {
         gameSceneRefs refs =
         FindAnyObjectByType<gameSceneRefs>();
-
-        pmp = refs.pmp;
         ttogText = refs.ttogText;
         timerP1Text = refs.timerP1Text;
         timerP2Text = refs.timerP2Text;
@@ -77,17 +77,19 @@ public class gamemanager : MonoBehaviour
         results = refs.results;
         player2UI = refs.player2UI;
         player2Cursor = refs.player2Cursor;
-        spots = refs.spots;
-        setupPlayers();
-
-        StartCoroutine(GameLoop());
-    }
-    private void setupPlayers()
-    {
+        planes = refs.planes;
+        referencePlane = refs.referencePlane;
+        foreach (planeProperties plane in planes)
+        {
+            if (plane != null) plane.gameObject.SetActive(false);
+        }
         if (player2UI != null)
             player2UI.SetActive(coop);
         if (player2Cursor != null)
             player2Cursor.enabled = coop;
+
+        totalRounds = (byte)planes.Length;
+        StartCoroutine(GameLoop());
     }
     void Start()
     {
@@ -98,9 +100,9 @@ public class gamemanager : MonoBehaviour
             timerP2Text.text = "";
             problemsLeftP1.text = "";
             problemsLeftP2.text = "";
-            if (pmp == null)
+            if (planes.Length == 0)
             {
-                Debug.LogError("no plane reference? :(");
+                Debug.LogError("no planes? :(");
                 enabled = false;
                 return;
             }
@@ -114,19 +116,22 @@ public class gamemanager : MonoBehaviour
         for (roundNumber = 1; roundNumber <= totalRounds; roundNumber++)
         {
             Debug.Log("starting round " + roundNumber);
+            activatePlaneForRound();
+            if (currentPlane == null) yield break;
             resetProblemSpots();
             setupRound();
-            pmp.resetPlane();
-            yield return pmp.arrive();
+            currentPlane.pmp.resetPlane();
+            yield return currentPlane.pmp.arrive();
             yield return ttog();
             yield return inspection();
             roundActive = false;
             revealResults();
             Debug.Log("round" + roundNumber + "done");
-            yield return new WaitForSeconds(1);
-            yield return pmp.depart();
+            yield return new WaitForSeconds(buffer / 2);
+            yield return currentPlane.pmp.depart();
             results.gameObject.SetActive(false);
             yield return new WaitForSeconds(buffer / 2);
+            currentPlane.gameObject.SetActive(false);
         }
         if (coop) results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
         else results.text = $"Player 1's final score: {scoreP1} pts";
@@ -138,25 +143,68 @@ public class gamemanager : MonoBehaviour
         SceneManager.LoadScene("mainMenu");
     }
 
+    private void activatePlaneForRound()
+    {
+        foreach (planeProperties p in planes)
+        {
+            if (p != null) p.gameObject.SetActive(false);
+        }
+        System.Collections.Generic.List<planeProperties> availablePlanes = new System.Collections.Generic.List<planeProperties>();
+        foreach (planeProperties p in planes)
+        {
+            if (p != null && p.pmp != null) availablePlanes.Add(p);
+        }
+        if (availablePlanes.Count == 0)
+        {
+            Debug.LogError("no planes? :(");
+            return;
+        }
+        currentPlane = availablePlanes[roundNumber - 1];
+        currentPlane.gameObject.SetActive(true);
+        referencePlane.GetComponent<Image>().sprite = currentPlane.correctImage;
+        spots = currentPlane.spots;
+        Debug.Log("selected plane: " + currentPlane.gameObject.name);
+    }
+
     private void resetProblemSpots()
     {
-        foreach (problemSpot p in spots)
+        foreach (problemSpot ps in spots)
         {
-            if (p != null)
+            if (ps != null)
             {
-                p.gameObject.SetActive(true);
-                p.resetSpot();
+                ps.gameObject.SetActive(true);
+                ps.resetSpot();
             }
         }
     }
 
     private void setupRound()
     {
-        faults = 0;
-        foreach(problemSpot p in spots)
+        System.Collections.Generic.List<problemSpot> shuffledSpots = new System.Collections.Generic.List<problemSpot>();
+        
+        foreach(problemSpot ps in spots)
         {
-            if (p != null && p.isFaulty) faults++;
+            if (ps != null) shuffledSpots.Add(ps);
         }
+        foreach (problemSpot ps2 in shuffledSpots) ps2.setFaulty(false);
+        if (shuffledSpots.Count == 0)
+        {
+            faults = 0;
+            attemptsP1 = 0;
+            attemptsP2 = 0;
+            updateAttemptsLeft();
+            Debug.LogWarning("no problemSpots on this plane? :(");
+            return;
+        }
+        for (int i = 0; i < shuffledSpots.Count; i++)
+        {
+            int randInd = Random.Range(i, shuffledSpots.Count);
+            (shuffledSpots[i], shuffledSpots[randInd]) = (shuffledSpots[randInd], shuffledSpots[i]);
+        }
+        int currMaxFaults = currentPlane != null ? currentPlane.maxFaults : 0; // null check
+        int max = Mathf.Clamp(currMaxFaults, 1, shuffledSpots.Count);
+        faults = (byte)Random.Range(1, max + 1);
+        for (int j = 0; j < faults; j++) shuffledSpots[j].setFaulty(true);
         attemptsP1 = faults;
         attemptsP2 = faults;
         updateAttemptsLeft();
@@ -191,8 +239,6 @@ public class gamemanager : MonoBehaviour
             timeRemaining = Mathf.Max(0, timeRemaining);
             timerP1Text.text = $"{timeRemaining:F2}";         // October 15 - Patrick removed the "Seconds left text here, replacing it with a separate subheader box that just"
             timerP2Text.text = $"{timeRemaining:F2}";         // says "left." Also, I don't know how but is there a way to make the timer show decimal points? (down to hundredth?)
-            //timerP1SubheaderText.gameObject.SetActive(true);  // I also added this "Subheader" text box. Added to the code here to see if I can make it appear/dissappear with the
-            //timerP2SubheaderText.gameObject.SetActive(true);  // timer text (the reason I want them separate is 'cause I want them to be a different font size)
             timerP1SubheaderText.text = "seconds left!";
             timerP2SubheaderText.text = "seconds left!";
             yield return null;
