@@ -3,19 +3,19 @@ using UnityEngine;
 public class planeMovementPath : MonoBehaviour
 {
 
-    public Vector3 startPosition = new Vector3(-20f, 5f, 0f);
-    public Vector3 inspectionPosition = new Vector3(-.5f, 1.25f, 0f);
-    public Vector3 endPosition = new Vector3(20f, 5f, 0f);
-    public Vector3 arrivalControlPoint = new Vector3(-8f, 8f, 0f);
-    public Vector3 departureControlPoint = new Vector3(8f, 0f, 0f);
-    public float sieRotZ = -90f; // starting and ending rotation are the same at all points in animation, but not in the middle
-    public float arrRotZ = -115f;
-    public float departRotZ = -45f;
+    public Vector3 startPosition = new Vector3(-20, 5, 0);
+    public Vector3 inspectionPosition = new Vector3(-.5f, 1.25f, 0);
+    public Vector3 endPosition = new Vector3(20, 5, 0);
+    public Vector3 arrivalControlPoint = new Vector3(-8, 8, 0);
+    public Vector3 departureControlPoint = new Vector3(8, 0, 0);
+    public Vector3 sieRot = new Vector3(0, 0, -90); // starting and ending rotation are the same at all points in animation, but not in the middle
+    public Vector3 arrRot = new Vector3(0, 0, -115);
+    public Vector3 departRot = new Vector3(0, 0, -45);
     public float animDur = 3f;
 
-    private Quaternion FToR(float z)
+    private Quaternion FToR(Vector3 rot)
     {
-        return Quaternion.Euler(0f, 0f, z);
+        return Quaternion.Euler(rot);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -29,17 +29,17 @@ public class planeMovementPath : MonoBehaviour
     public void resetPlane()
     {
         transform.position = startPosition;
-        transform.rotation = FToR(sieRotZ);
+        transform.rotation = FToR(sieRot);
     }
 
     public IEnumerator arrive()
     {
-        yield return animatePath(startPosition, arrivalControlPoint, inspectionPosition, FToR(sieRotZ), FToR(arrRotZ), FToR(sieRotZ), animDur);
+        yield return animatePath(startPosition, arrivalControlPoint, inspectionPosition, FToR(sieRot), FToR(arrRot), FToR(sieRot), animDur);
     }
 
     public IEnumerator depart()
     {
-        yield return animatePath(inspectionPosition, departureControlPoint, endPosition, FToR(sieRotZ), FToR(departRotZ), FToR(sieRotZ), animDur);
+        yield return animatePath(inspectionPosition, departureControlPoint, endPosition, FToR(sieRot), FToR(departRot), FToR(sieRot), animDur);
     }
 
     private IEnumerator animatePath(Vector3 start, Vector3 ctrlPt, Vector3 end, Quaternion startRot, Quaternion midRot, Quaternion endRot, float duration)

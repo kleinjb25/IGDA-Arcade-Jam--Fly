@@ -185,11 +185,31 @@ public class gamemanager : MonoBehaviour
 
     private void setupRound()
     {
-        faults = 0;
+        System.Collections.Generic.List<problemSpot> shuffledSpots = new System.Collections.Generic.List<problemSpot>();
+        
         foreach(problemSpot ps in spots)
         {
-            if (ps != null && ps.isFaulty) faults++;
+            if (ps != null) shuffledSpots.Add(ps);
         }
+        foreach (problemSpot ps2 in shuffledSpots) ps2.setFaulty(false);
+        if (shuffledSpots.Count == 0)
+        {
+            faults = 0;
+            attemptsP1 = 0;
+            attemptsP2 = 0;
+            updateAttemptsLeft();
+            Debug.LogWarning("no problemSpots on this plane? :(");
+            return;
+        }
+        for (int i = 0; i < shuffledSpots.Count; i++)
+        {
+            int randInd = Random.Range(i, shuffledSpots.Count);
+            (shuffledSpots[i], shuffledSpots[randInd]) = (shuffledSpots[randInd], shuffledSpots[i]);
+        }
+        int currMaxFaults = currentPlane != null ? currentPlane.maxFaults : 0; // null check
+        int max = Mathf.Clamp(currMaxFaults, 1, shuffledSpots.Count);
+        faults = (byte)Random.Range(1, max + 1);
+        for (int j = 0; j < faults; j++) shuffledSpots[j].setFaulty(true);
         attemptsP1 = faults;
         attemptsP2 = faults;
         updateAttemptsLeft();
