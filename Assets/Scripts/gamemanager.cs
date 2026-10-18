@@ -13,7 +13,7 @@ public class gamemanager : MonoBehaviour
     public static gamemanager instance { get; private set; }
     public float roundTimer = 10f, animLength = 5f, buffer = 5f;
     public byte roundNumber = 1, faults;
-    public const byte totalRounds = 3;
+    public byte totalRounds;
     public bool roundActive;
     public float timeRemaining;
     public int attemptsP1, attemptsP2;
@@ -88,6 +88,7 @@ public class gamemanager : MonoBehaviour
         if (player2Cursor != null)
             player2Cursor.enabled = coop;
 
+        totalRounds = (byte)planes.Length;
         StartCoroutine(GameLoop());
     }
     void Start()
