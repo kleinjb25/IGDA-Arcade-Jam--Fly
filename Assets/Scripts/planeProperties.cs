@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class planeProperties : MonoBehaviour
 {
-    public planeMovementPath movementScript;
+    public planeMovementPath pmp;
     public problemSpot[] spots;
     public Sprite correctImage;
     public byte maxFaults;

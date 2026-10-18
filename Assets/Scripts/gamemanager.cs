@@ -9,7 +9,7 @@ using static UnityEditorInternal.ReorderableList;
 
 public class gamemanager : MonoBehaviour
 {
-    public bool coop = true;
+    public bool coop;
     public static gamemanager instance { get; private set; }
     public float roundTimer = 10f, animLength = 5f, buffer = 5f;
     public byte roundNumber = 1, faults;
@@ -27,7 +27,6 @@ public class gamemanager : MonoBehaviour
     public playerCursor player2Cursor;
     public planeProperties[] planes;
     private planeProperties currentPlane;
-    public planeMovementPath pmp;
     public problemSpot[] spots;
     public GameObject referencePlane;
 
@@ -54,10 +53,8 @@ public class gamemanager : MonoBehaviour
             instance = null;
     }
 
-    public void loadMainGame(GameObject buttonClicked)
-    {
-        coop = buttonClicked.name == "p2";
-        Debug.Log($"coop is {coop}");
+    public void loadMainGame()
+    {       
         SceneManager.LoadScene("mainGame");
     }
 
@@ -70,8 +67,6 @@ public class gamemanager : MonoBehaviour
     {
         gameSceneRefs refs =
         FindAnyObjectByType<gameSceneRefs>();
-
-        pmp = refs.pmp;
         ttogText = refs.ttogText;
         timerP1Text = refs.timerP1Text;
         timerP2Text = refs.timerP2Text;
@@ -104,9 +99,9 @@ public class gamemanager : MonoBehaviour
             timerP2Text.text = "";
             problemsLeftP1.text = "";
             problemsLeftP2.text = "";
-            if (pmp == null)
+            if (planes.Length == 0)
             {
-                Debug.LogError("no plane reference? :(");
+                Debug.LogError("no planes? :(");
                 enabled = false;
                 return;
             }
@@ -124,15 +119,15 @@ public class gamemanager : MonoBehaviour
             if (currentPlane == null) yield break;
             resetProblemSpots();
             setupRound();
-            pmp.resetPlane();
-            yield return pmp.arrive();
+            currentPlane.pmp.resetPlane();
+            yield return currentPlane.pmp.arrive();
             yield return ttog();
             yield return inspection();
             roundActive = false;
             revealResults();
             Debug.Log("round" + roundNumber + "done");
             yield return new WaitForSeconds(buffer / 2);
-            yield return pmp.depart();
+            yield return currentPlane.pmp.depart();
             results.gameObject.SetActive(false);
             yield return new WaitForSeconds(buffer / 2);
             currentPlane.gameObject.SetActive(false);
@@ -156,7 +151,7 @@ public class gamemanager : MonoBehaviour
         System.Collections.Generic.List<planeProperties> availablePlanes = new System.Collections.Generic.List<planeProperties>();
         foreach (planeProperties p in planes)
         {
-            if (p != null && p.movementScript != null) availablePlanes.Add(p);
+            if (p != null && p.pmp != null) availablePlanes.Add(p);
         }
         if (availablePlanes.Count == 0)
         {
@@ -166,7 +161,6 @@ public class gamemanager : MonoBehaviour
         currentPlane = availablePlanes[roundNumber - 1];
         currentPlane.gameObject.SetActive(true);
         referencePlane.GetComponent<Image>().sprite = currentPlane.correctImage;
-        pmp = currentPlane.movementScript;
         spots = currentPlane.spots;
         Debug.Log("selected plane: " + currentPlane.gameObject.name);
     }

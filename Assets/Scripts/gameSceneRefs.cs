@@ -3,7 +3,6 @@ using TMPro;
 
 public class gameSceneRefs : MonoBehaviour
 {
-    public planeMovementPath pmp;
     public TextMeshProUGUI ttogText;
     public TextMeshProUGUI timerP1Text, timerP2Text;
     public TextMeshProUGUI timerP1SubheaderText, timerP2SubheaderText; //October 15 - Added by Patrick as part of a UI rework.
