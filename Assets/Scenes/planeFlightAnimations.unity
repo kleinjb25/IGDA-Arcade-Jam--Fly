@@ -3461,11 +3461,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.101181775
+      value: -0.10452837
       objectReference: {fileID: 0}
     - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.994868
+      value: 0.9945219
       objectReference: {fileID: 0}
     - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
       propertyPath: m_LocalRotation.z
@@ -3481,7 +3481,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: -11.614
+      value: -12
       objectReference: {fileID: 0}
     - target: {fileID: 8480138089149573140, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
       propertyPath: m_LocalPosition.z
@@ -3526,9 +3526,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2017636935}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ee3f3cbf1320a54aa87c07bf542e84a, type: 3}
+  m_Script: {fileID: 11500000, guid: 02b65f75e57a6584a98e47d813226c84, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: '::'
+  m_EditorClassIdentifier: Assembly-CSharp::planeSuccesAnimation
 --- !u!1 &2017636939 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5540757394712526858, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}

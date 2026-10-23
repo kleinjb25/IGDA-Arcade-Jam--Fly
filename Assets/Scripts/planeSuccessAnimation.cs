@@ -1,8 +1,8 @@
 using UnityEngine;
 
-public class planeSuccesAnimation : MonoBehaviour
+public class planeSuccessAnimation : MonoBehaviour
 {
-    float clock1 = 1.75f;  //each "clock" represents a different phase of the animation. In this "success" animation, there are 3 phases total (2 built, one WIP)
+    float clock1 = 1.75f;  //each "clock" represents a different phase of the animation. In this "success" animation, there are 3 phases total
     float clock2 = 1.25f;  //The second phase is slightly shorter than the first; this is partly because the plane spawns in offscreen, leaving time for a quick fade-in.
     float clock3 = 1.75f;  //This is where the "success" and "game over" animations differ. If you succeed, the plane continues flying uneventfully
 
