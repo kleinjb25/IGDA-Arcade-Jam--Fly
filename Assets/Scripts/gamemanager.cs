@@ -9,11 +9,11 @@ using static UnityEditorInternal.ReorderableList;
 
 public class gamemanager : MonoBehaviour
 {
-    public bool coop;
-    public static gamemanager instance { get; private set; }
-    public float roundTimer = 10f, animLength = 5f, buffer = 5f;
+    public bool coop;   //Is 1p (F) or 2p (T)?
+    public static gamemanager instance { get; private set; } 
+    public float roundTimer = 10f, animLength = 5f, buffer = 5f;  //timing of game elements
     public byte roundNumber = 1, faults;
-    public byte totalRounds;
+    public byte totalRounds;   //length of planes array
     public bool roundActive;
     public float timeRemaining;
     public int attemptsP1, attemptsP2;
@@ -32,14 +32,14 @@ public class gamemanager : MonoBehaviour
 
     private void Awake()
     {
-        if (instance != null && instance != this)
+        if (instance != null && instance != this)   //is there a duplicate game manager? (don't want this logic running twice)
         {
             Debug.LogWarning("destroying duplicate gamemanager.");
             Destroy(gameObject);
             return;
         }
 
-        instance = this;
+        instance = this;                        //make sure *this* is the instance of gamemanager we're running
         DontDestroyOnLoad(gameObject);
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -47,13 +47,13 @@ public class gamemanager : MonoBehaviour
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded -= OnSceneLoaded;    //Overrides default Unity logic for loading scenes with OnSceneLoaded() below
 
         if (instance == this)
             instance = null;
     }
 
-    public void loadMainGame()
+    public void loadMainGame() //Function that starts the game
     {       
         SceneManager.LoadScene("mainGame");
     }
@@ -65,7 +65,7 @@ public class gamemanager : MonoBehaviour
 
     private void setupGameScene()
     {
-        gameSceneRefs refs =
+        gameSceneRefs refs =                         //Lines 68-91 are about finding objects in the scene and establishing a reference/variable for them.
         FindAnyObjectByType<gameSceneRefs>();
         ttogText = refs.ttogText;
         timerP1Text = refs.timerP1Text;
@@ -89,11 +89,11 @@ public class gamemanager : MonoBehaviour
             player2Cursor.enabled = coop;
 
         totalRounds = (byte)planes.Length;
-        StartCoroutine(GameLoop());
+        StartCoroutine(GameLoop());           //starts main gameplay loop
     }
     void Start()
     {
-        if (SceneManager.GetActiveScene().name == "mainGame")
+        if (SceneManager.GetActiveScene().name == "mainGame")       //resets and prepares the UI text
         {
             ttogText.text = "";
             timerP1Text.text = "";
@@ -117,7 +117,7 @@ public class gamemanager : MonoBehaviour
         {
             Debug.Log("starting round " + roundNumber);
             activatePlaneForRound();
-            if (currentPlane == null) yield break;
+            if (currentPlane == null) yield break;  //failsafe if something's null with the current plane
             resetProblemSpots();
             setupRound();
             currentPlane.pmp.resetPlane();
@@ -143,7 +143,7 @@ public class gamemanager : MonoBehaviour
         SceneManager.LoadScene("mainMenu");
     }
 
-    private void activatePlaneForRound()
+    private void activatePlaneForRound()     //picks the plane that's gonna spawn next and spawns it
     {
         foreach (planeProperties p in planes)
         {
@@ -161,7 +161,7 @@ public class gamemanager : MonoBehaviour
         }
         currentPlane = availablePlanes[roundNumber - 1];
         currentPlane.gameObject.SetActive(true);
-        referencePlane.GetComponent<Image>().sprite = currentPlane.correctImage;
+        referencePlane.GetComponent<Image>().sprite = currentPlane.correctImage; //Updates the sprite image
         spots = currentPlane.spots;
         Debug.Log("selected plane: " + currentPlane.gameObject.name);
     }
@@ -178,15 +178,15 @@ public class gamemanager : MonoBehaviour
         }
     }
 
-    private void setupRound()
+    private void setupRound()  //Randomly picks what's wrong with the plane
     {
-        System.Collections.Generic.List<problemSpot> shuffledSpots = new System.Collections.Generic.List<problemSpot>();
+        System.Collections.Generic.List<problemSpot> shuffledSpots = new System.Collections.Generic.List<problemSpot>();  //list of a plane's problem spots
         
         foreach(problemSpot ps in spots)
         {
             if (ps != null) shuffledSpots.Add(ps);
         }
-        foreach (problemSpot ps2 in shuffledSpots) ps2.setFaulty(false);
+        foreach (problemSpot ps2 in shuffledSpots) ps2.setFaulty(false);  //sets all problem spots to "fixed"
         if (shuffledSpots.Count == 0)
         {
             faults = 0;
@@ -196,22 +196,22 @@ public class gamemanager : MonoBehaviour
             Debug.LogWarning("no problemSpots on this plane? :(");
             return;
         }
-        for (int i = 0; i < shuffledSpots.Count; i++)
+        for (int i = 0; i < shuffledSpots.Count; i++)   //shuffles the order of problem spots so a random one can be picked below
         {
             int randInd = Random.Range(i, shuffledSpots.Count);
             (shuffledSpots[i], shuffledSpots[randInd]) = (shuffledSpots[randInd], shuffledSpots[i]);
         }
         int currMaxFaults = currentPlane != null ? currentPlane.maxFaults : 0; // null check
         int max = Mathf.Clamp(currMaxFaults, 1, shuffledSpots.Count);
-        faults = (byte)Random.Range(1, max + 1);
-        for (int j = 0; j < faults; j++) shuffledSpots[j].setFaulty(true);
+        faults = (byte)Random.Range(1, max + 1);                                 //How many faults should there be for this round?
+        for (int j = 0; j < faults; j++) shuffledSpots[j].setFaulty(true);       //Sets which faults should be the broken one
         attemptsP1 = faults;
         attemptsP2 = faults;
         updateAttemptsLeft();
     }
-
-    private IEnumerator ttog()
-    {
+    
+    private IEnumerator ttog()  // ttog = "Three Two One Go." Updates countdown UI text
+    {  
         ttogText.gameObject.SetActive(true);
         for (int i = 3; i > 0; i--)
         {
@@ -224,7 +224,7 @@ public class gamemanager : MonoBehaviour
         ttogText.gameObject.SetActive(false);
     }
 
-    private IEnumerator inspection()
+    private IEnumerator inspection()  //updates the round timer
     {
         timeRemaining = roundTimer;
         roundActive = true;
@@ -233,12 +233,12 @@ public class gamemanager : MonoBehaviour
         {
             if (!hasAttemptsLeft(1))
             {
-                if (!coop || !hasAttemptsLeft(2)) break;
+                if (!coop || !hasAttemptsLeft(2)) break;  //checks if each player has selections ("checks") left. Ends the round if they've all made them.
             }
             timeRemaining -= Time.deltaTime;
             timeRemaining = Mathf.Max(0, timeRemaining);
-            timerP1Text.text = $"{timeRemaining:F2}";         // October 15 - Patrick removed the "Seconds left text here, replacing it with a separate subheader box that just"
-            timerP2Text.text = $"{timeRemaining:F2}";         // says "left." Also, I don't know how but is there a way to make the timer show decimal points? (down to hundredth?)
+            timerP1Text.text = $"{timeRemaining:F2}";         // October 15 - Patrick removed the "Seconds left" text here, replacing it with a separate subheader box that just says "left."
+            timerP2Text.text = $"{timeRemaining:F2}";
             timerP1SubheaderText.text = "seconds left!";
             timerP2SubheaderText.text = "seconds left!";
             yield return null;
@@ -250,7 +250,7 @@ public class gamemanager : MonoBehaviour
         roundActive = false;
     }
 
-    private void enableProblemSpots()
+    private void enableProblemSpots()   //Makes it so every problem spot shows onscreen and is selectable
     {
         foreach(problemSpot p in spots)
         {
@@ -258,7 +258,7 @@ public class gamemanager : MonoBehaviour
         }
     }
 
-    private void revealResults()
+    private void revealResults()   //Logic that detects who missed what spots
     {
         bool p1Missed = false;
         bool p2Missed = false;
@@ -272,7 +272,7 @@ public class gamemanager : MonoBehaviour
             if (coop && !p.selectedByP2)
                 p2Missed = true;
         }
-        if (!coop)
+        if (!coop)    //alters UI text depending on 1p or 2p
         {
             if (p1Missed) results.text = $"You missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts";
             else results.text = $"Player 1's score: {scoreP1} pts";
@@ -287,19 +287,19 @@ public class gamemanager : MonoBehaviour
         results.gameObject.SetActive(true);
     }
 
-    public bool hasAttemptsLeft(int playerNum)
+    public bool hasAttemptsLeft(int playerNum) //tracks if each player has any selections left
     {
         if (playerNum == 1) return attemptsP1 > 0;
         else if (playerNum == 2) return attemptsP2 > 0;
         else return false;
     }
 
-    public void useAttempt(int playerNum, problemSpot spot)
+    public void useAttempt(int playerNum, problemSpot spot) //Registers a selection, then gives score if it was a correct one
     {
         if (playerNum == 1)
         {
             attemptsP1--;
-            if (spot.isFaulty) scoreP1 += (int)(69*timeRemaining);
+            if (spot.isFaulty) scoreP1 += (int)(69*timeRemaining); //No particular reason for 69 specifically, just FUNNI
         } 
         else if (playerNum == 2)
         {
@@ -310,7 +310,7 @@ public class gamemanager : MonoBehaviour
         updateAttemptsLeft();
     }
 
-    private void updateAttemptsLeft()
+    private void updateAttemptsLeft() //updates UI
     {
         problemsLeftP1.text = $"{attemptsP1:F0} / {faults:F0}\n";       // October 15 - Patrick removes "attempts left" from these strings in an attempt to
         problemsLeftP2.text = $"{attemptsP2:F0} / {faults:F0}\n";       // streamline the UI. Shouldn't affect display of the number.
