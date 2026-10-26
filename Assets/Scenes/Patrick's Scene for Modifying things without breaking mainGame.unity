@@ -652,6 +652,9 @@ MonoBehaviour:
   p2Icon: {fileID: 135171676}
   greenCircle: {fileID: 1710591381}
   redCircle: {fileID: 2137185091}
+  fixedPart: {fileID: 0}
+  brokenPart: {fileID: 0}
+  fixedWhenVisibleOnly: 0
 --- !u!1 &307995723
 GameObject:
   m_ObjectHideFlags: 0
@@ -1216,6 +1219,63 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1001 &441784334
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -10.319191
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 29.7
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 70.31804
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
+      propertyPath: m_Name
+      value: Airliner
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 5d137e08802bcec42b2c76102f2b3499, type: 3}
 --- !u!1 &475837782
 GameObject:
   m_ObjectHideFlags: 0
@@ -1494,7 +1554,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bee96f31ecf3b034192b40e72a43594a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::gameSceneRefs
-  pmp: {fileID: 1126147280}
   ttogText: {fileID: 130142819}
   timerP1Text: {fileID: 1215778522}
   timerP2Text: {fileID: 2092730349}
@@ -1504,11 +1563,9 @@ MonoBehaviour:
   problemsLeftP2: {fileID: 58420465}
   results: {fileID: 1143237845}
   player2UI: {fileID: 895044111}
+  referencePlane: {fileID: 0}
   player2Cursor: {fileID: 1169628624}
-  spots:
-  - {fileID: 1969003343}
-  - {fileID: 1981850414}
-  - {fileID: 203745966}
+  planes: []
 --- !u!4 &657065958
 Transform:
   m_ObjectHideFlags: 0
@@ -2208,9 +2265,9 @@ MonoBehaviour:
   endPosition: {x: 20, y: 5, z: 0}
   arrivalControlPoint: {x: -12, y: 4, z: 0}
   departureControlPoint: {x: 8, y: 0, z: 0}
-  sieRotZ: -90
-  arrRotZ: -110
-  departRotZ: -75
+  sieRot: {x: 0, y: 0, z: -90}
+  arrRot: {x: 0, y: 0, z: -115}
+  departRot: {x: 0, y: 0, z: -45}
   animDur: 3
 --- !u!1 &1133624471
 GameObject:
@@ -3859,6 +3916,9 @@ MonoBehaviour:
   p2Icon: {fileID: 1449747403}
   greenCircle: {fileID: 2027861375}
   redCircle: {fileID: 475837782}
+  fixedPart: {fileID: 0}
+  brokenPart: {fileID: 0}
+  fixedWhenVisibleOnly: 0
 --- !u!135 &1969003344
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -3955,6 +4015,9 @@ MonoBehaviour:
   p2Icon: {fileID: 1133624471}
   greenCircle: {fileID: 563857924}
   redCircle: {fileID: 1881467165}
+  fixedPart: {fileID: 0}
+  brokenPart: {fileID: 0}
+  fixedWhenVisibleOnly: 0
 --- !u!1 &2027861375
 GameObject:
   m_ObjectHideFlags: 0
@@ -4385,67 +4448,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
   m_BlendShapeWeights: []
---- !u!1001 &6264450522104487298
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 5685377967043896521, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_Name
-      value: Starter Plane
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -8.48
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 23.3
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 116.9
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.09758294
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.9952274
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 6005783876069843769, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: -11.2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8480138089149573140, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.004
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: f3e8b1c857a76cf448eec9705440a8c4, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -4459,5 +4461,5 @@ SceneRoots:
   - {fileID: 787531604}
   - {fileID: 657065958}
   - {fileID: 1868123090}
-  - {fileID: 6264450522104487298}
   - {fileID: 653446826}
+  - {fileID: 441784334}
