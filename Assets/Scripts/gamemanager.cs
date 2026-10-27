@@ -113,6 +113,7 @@ public class gamemanager : MonoBehaviour
     // wait for 1/3 buffer while playing plane animation and 3 2 1 go, then start round. after roundtimer is done, start buffer timer and play animation of plane flying off (and either crashing and exploding, or flying 'into the sunset'). repeat totalRounds times, incrementing roundNumber each time.
     private IEnumerator GameLoop()
     {
+        bool crashedThisRound = false;
         for (roundNumber = 1; roundNumber <= totalRounds; roundNumber++)
         {
             Debug.Log("starting round " + roundNumber);
@@ -125,13 +126,16 @@ public class gamemanager : MonoBehaviour
             yield return ttog();
             yield return inspection();
             roundActive = false;
-            revealResults();
+            crashedThisRound = revealResults();
             Debug.Log("round" + roundNumber + "done");
             yield return new WaitForSeconds(buffer / 2);
-            yield return currentPlane.pmp.depart();
             results.gameObject.SetActive(false);
-            yield return new WaitForSeconds(buffer / 2);
+            yield return currentPlane.pmp.depart();
+            planeEndAnimation endAnim = currentPlane.GetComponent<planeEndAnimation>();
+            if (endAnim != null) yield return endAnim.playAnimation(crashedThisRound);
+            else Debug.LogWarning($"no planeEndAnimation on {currentPlane.name}? D:");
             currentPlane.gameObject.SetActive(false);
+            yield return new WaitForSeconds(1);
         }
         if (coop) results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
         else results.text = $"Player 1's final score: {scoreP1} pts";
@@ -258,10 +262,11 @@ public class gamemanager : MonoBehaviour
         }
     }
 
-    private void revealResults()   //Logic that detects who missed what spots
+    private bool revealResults()   //Logic that detects who missed what spots
     {
         bool p1Missed = false;
         bool p2Missed = false;
+        bool shouldCrash = false;
         foreach (problemSpot p in spots)
         {
             if (p != null) p.revealResult();
@@ -274,17 +279,25 @@ public class gamemanager : MonoBehaviour
         }
         if (!coop)    //alters UI text depending on 1p or 2p
         {
-            if (p1Missed) results.text = $"You missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts";
+            if (p1Missed) {
+                results.text = $"You missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts";
+                shouldCrash = true;
+            } 
             else results.text = $"Player 1's score: {scoreP1} pts";
         }
         else
         {
-            if (p1Missed && p2Missed) results.text = $"Both players missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
+            if (p1Missed && p2Missed)
+            {
+                results.text = $"Both players missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
+                shouldCrash = true;
+            }
             else if (p1Missed) results.text = $"Player 1 missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
             else if (p2Missed) results.text = $"Player 2 missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
             else results.text = $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
         }
         results.gameObject.SetActive(true);
+        return shouldCrash;
     }
 
     public bool hasAttemptsLeft(int playerNum) //tracks if each player has any selections left
