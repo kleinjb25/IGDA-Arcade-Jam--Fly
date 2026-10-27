@@ -835,11 +835,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::gamemanager
   coop: 0
-  roundTimer: 10
+  roundTimer: 20
   animLength: 5
   buffer: 5
   roundNumber: 1
   faults: 0
+  totalRounds: 0
   roundActive: 0
   timeRemaining: 0
   attemptsP1: 0
@@ -857,7 +858,6 @@ MonoBehaviour:
   player2UI: {fileID: 0}
   player2Cursor: {fileID: 0}
   planes: []
-  pmp: {fileID: 0}
   spots: []
   referencePlane: {fileID: 0}
 --- !u!4 &1143847985
