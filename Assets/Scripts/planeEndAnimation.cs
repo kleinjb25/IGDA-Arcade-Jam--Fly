@@ -10,6 +10,11 @@ public class planeEndAnimation : MonoBehaviour
     public float smokeDelay = 0.2f;
     private Vector3 originalCameraPosition;
 
+    public AudioSource audioSource; //Audio Source is what plays the engine sounds. Btt this code needs a separate player, so that the explosion effects aren't affected by the pitch shifting of the engine.
+    public AudioSource crashSource;
+    public AudioClip CrashBoom;
+    public AudioClip CrashCrunch;
+
     public IEnumerator playAnimation(bool didCrash)
     {
         Camera c = animationCamera != null ? animationCamera : Camera.main;
@@ -29,11 +34,13 @@ public class planeEndAnimation : MonoBehaviour
         {
             // rotate to nose-dive
             yield return movePhase(0.25f, new Vector3(-15, 0, 700), new Vector3(20, -20, 0));
-            
+
+            audioSource.pitch -= 3 * Time.deltaTime;  //Engine sound sharply pitches down as the plane crashes, for added comedy value.
             float elapsed = 0;
             bool smokeSpawned = false;
             while (elapsed < 1)
             {
+                audioSource.pitch -= 5 * Time.deltaTime;  //Engine sound sharply pitches down as the plane crashes, for added comedy value.
                 elapsed += Time.deltaTime;
                 // actual nose-dive movement
                 transform.position += new Vector3(20, -100, 0) * Time.deltaTime;
@@ -78,6 +85,9 @@ public class planeEndAnimation : MonoBehaviour
         Vector3 spawnPos = smokeSpawnPoint != null ? smokeSpawnPoint.position : transform.position;
         ParticleSystem smoke = Instantiate(smokePrefab, spawnPos, smokePrefab.transform.rotation);
         smoke.Play();
+        audioSource.Stop();
+        crashSource.PlayOneShot(CrashBoom, 1f);
+        crashSource.PlayOneShot(CrashCrunch, 1f);
         float lifetime = smoke.main.duration + smoke.main.startLifetime.constantMax;
         Destroy(smoke.gameObject, lifetime);
         return lifetime / 3;

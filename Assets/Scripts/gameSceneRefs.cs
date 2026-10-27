@@ -12,4 +12,7 @@ public class gameSceneRefs : MonoBehaviour
     public GameObject referencePlane;
     public playerCursor player2Cursor;
     public planeProperties[] planes;
+    public AudioSource audioSourceCamera;
+    public AudioClip VictoryFanfare;
+    public AudioClip FailureFanfare;
 }

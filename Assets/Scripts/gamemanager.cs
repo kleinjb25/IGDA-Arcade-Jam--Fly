@@ -29,6 +29,9 @@ public class gamemanager : MonoBehaviour
     private planeProperties currentPlane;
     public problemSpot[] spots;
     public GameObject referencePlane;
+    public AudioSource audioSourceCamera;
+    public AudioClip VictoryFanfare;
+    public AudioClip FailureFanfare;
 
     private void Awake()
     {
@@ -79,6 +82,9 @@ public class gamemanager : MonoBehaviour
         player2Cursor = refs.player2Cursor;
         planes = refs.planes;
         referencePlane = refs.referencePlane;
+        audioSourceCamera = refs.audioSourceCamera;
+        VictoryFanfare = refs.VictoryFanfare;
+        FailureFanfare = refs.FailureFanfare;
         foreach (planeProperties plane in planes)
         {
             if (plane != null) plane.gameObject.SetActive(false);
@@ -139,6 +145,7 @@ public class gamemanager : MonoBehaviour
         }
         if (coop) results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
         else results.text = $"Player 1's final score: {scoreP1} pts";
+        audioSourceCamera.PlayOneShot(VictoryFanfare, 2f);
         results.gameObject.SetActive(true);
         yield return new WaitForSeconds(buffer);
         results.gameObject.SetActive(false);
@@ -282,7 +289,7 @@ public class gamemanager : MonoBehaviour
             if (p1Missed) {
                 results.text = $"You missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts";
                 shouldCrash = true;
-            } 
+        } 
             else results.text = $"Player 1's score: {scoreP1} pts";
         }
         else
@@ -291,13 +298,16 @@ public class gamemanager : MonoBehaviour
             {
                 results.text = $"Both players missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
                 shouldCrash = true;
-            }
+        }
             else if (p1Missed) results.text = $"Player 1 missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
             else if (p2Missed) results.text = $"Player 2 missed a spot!!! D:\n" + $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
             else results.text = $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
         }
         results.gameObject.SetActive(true);
-        return shouldCrash;
+        if (shouldCrash) {                                                //plays failure fanfare if the plane's gonna crash.
+            audioSourceCamera.PlayOneShot(FailureFanfare, 2f);
+        }
+    return shouldCrash;
     }
 
     public bool hasAttemptsLeft(int playerNum) //tracks if each player has any selections left

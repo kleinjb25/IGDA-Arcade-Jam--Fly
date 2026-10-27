@@ -13,6 +13,12 @@ public class planeMovementPath : MonoBehaviour
     public Vector3 departRot = new Vector3(0, 0, -45);
     public float animDur = 3f;
 
+    public AudioSource audioSource;
+    public AudioClip ArrivalFile;
+    public float ArrivalTimestamp;
+    public AudioClip DepartureFile;
+    public float DepartureTimestamp;
+
     private Quaternion FToR(Vector3 rot)
     {
         return Quaternion.Euler(rot);
@@ -34,11 +40,17 @@ public class planeMovementPath : MonoBehaviour
 
     public IEnumerator arrive()
     {
+        audioSource.clip = ArrivalFile;
+        audioSource.time = ArrivalTimestamp;
+        audioSource.Play();
         yield return animatePath(startPosition, arrivalControlPoint, inspectionPosition, FToR(sieRot), FToR(arrRot), FToR(sieRot), animDur);
     }
 
     public IEnumerator depart()
     {
+        audioSource.clip = DepartureFile;
+        audioSource.time = DepartureTimestamp;
+        audioSource.Play();
         yield return animatePath(inspectionPosition, departureControlPoint, endPosition, FToR(sieRot), FToR(departRot), FToR(sieRot), animDur);
     }
 
@@ -47,6 +59,7 @@ public class planeMovementPath : MonoBehaviour
         float elapsed = 0f;
         transform.position = start;
         transform.rotation = startRot;
+        audioSource.pitch = 1.1f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -67,5 +80,6 @@ public class planeMovementPath : MonoBehaviour
         }
         transform.position = end;
         transform.rotation = endRot;
+        audioSource.pitch = 1;
     }
 }
