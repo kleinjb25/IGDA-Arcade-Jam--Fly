@@ -32,6 +32,7 @@ public class gamemanager : MonoBehaviour
     public AudioSource audioSourceCamera;
     public AudioClip VictoryFanfare;
     public AudioClip FailureFanfare;
+    public AudioClip stageClear;
 
     private void Awake()
     {
@@ -85,6 +86,7 @@ public class gamemanager : MonoBehaviour
         audioSourceCamera = refs.audioSourceCamera;
         VictoryFanfare = refs.VictoryFanfare;
         FailureFanfare = refs.FailureFanfare;
+        stageClear = refs.stageClear;
         foreach (planeProperties plane in planes)
         {
             if (plane != null) plane.gameObject.SetActive(false);
@@ -149,24 +151,14 @@ public class gamemanager : MonoBehaviour
                 results.CrossFadeAlpha(0, 0, false);
                 results.gameObject.SetActive(true);
                 results.CrossFadeAlpha(1, 1, false);
-                yield return new WaitForSeconds(4); 
-                // if you want to add fade-in (or fade-out) to other text, make sure the gameObject is active, then just call CrossFadeAlpha on it (first num is opacity, second num is how long it should take, and just leave the boolean as false)
-                results.text = "";
+                yield return new WaitForSeconds(4);
                 results.gameObject.SetActive(false);
-                SceneManager.LoadScene("mainMenu");
-                yield break;
+                // if you want to add fade-in (or fade-out) to other text, make sure the gameObject is active, then just call CrossFadeAlpha on it (first num is opacity, second num is how long it should take, and just leave the boolean as false)
+                yield return finishGame(crashedThisRound);
             }
             yield return new WaitForSeconds(1);
         }
-        if (coop) results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
-        else results.text = $"Player 1's final score: {scoreP1} pts";
-        audioSourceCamera.PlayOneShot(VictoryFanfare, 2f);
-        results.gameObject.SetActive(true);
-        yield return new WaitForSeconds(buffer);
-        results.gameObject.SetActive(false);
-        scoreP1 = 0;
-        scoreP2 = 0;
-        SceneManager.LoadScene("mainMenu");
+        yield return finishGame(crashedThisRound);
     }
 
     private void activatePlaneForRound()     //picks the plane that's gonna spawn next and spawns it
@@ -319,11 +311,12 @@ public class gamemanager : MonoBehaviour
             else results.text = $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
         }
         results.gameObject.SetActive(true);
-        if (shouldCrash) {                                                //plays failure fanfare if the plane's gonna crash.
-            audioSourceCamera.PlayOneShot(FailureFanfare, 2f);
-        }
+        // todo: change this to the stagefail sound effect, and then see line 354
+        if (shouldCrash) audioSourceCamera.PlayOneShot(FailureFanfare, 2); //plays failure fanfare if the plane's gonna crash.
+        else audioSourceCamera.PlayOneShot(stageClear, 2);
     return shouldCrash;
     }
+
 
     public bool hasAttemptsLeft(int playerNum) //tracks if each player has any selections left
     {
@@ -352,5 +345,19 @@ public class gamemanager : MonoBehaviour
     {
         problemsLeftP1.text = $"{attemptsP1:F0} / {faults:F0}\n";       // October 15 - Patrick removes "attempts left" from these strings in an attempt to
         problemsLeftP2.text = $"{attemptsP2:F0} / {faults:F0}\n";       // streamline the UI. Shouldn't affect display of the number.
+    }
+
+    private IEnumerator finishGame(bool crashedThisRound)
+    {
+        if (coop) results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
+        else results.text = $"Player 1's final score: {scoreP1} pts";
+        if (!crashedThisRound) audioSourceCamera.PlayOneShot(VictoryFanfare, 2f);
+        //todo: add else, see line 314
+        results.gameObject.SetActive(true);
+        yield return new WaitForSeconds(buffer);
+        results.gameObject.SetActive(false);
+        scoreP1 = 0;
+        scoreP2 = 0;
+        SceneManager.LoadScene("mainMenu");
     }
 }

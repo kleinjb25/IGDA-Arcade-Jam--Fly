@@ -5531,6 +5531,7 @@ MonoBehaviour:
   audioSourceCamera: {fileID: 330585548}
   VictoryFanfare: {fileID: 8300000, guid: 518aa2bd7f9102144807ab8f66d3f295, type: 3}
   FailureFanfare: {fileID: 8300000, guid: 243fc58f03afb994c810059f62424812, type: 3}
+  stageClear: {fileID: 8300000, guid: 224d1e707497e744c9be7b695910b6db, type: 3}
 --- !u!4 &657065958
 Transform:
   m_ObjectHideFlags: 0
