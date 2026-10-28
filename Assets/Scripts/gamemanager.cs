@@ -108,7 +108,7 @@ public class gamemanager : MonoBehaviour
             problemsLeftP2.text = "";
             if (planes.Length == 0)
             {
-                Debug.LogError("no planes? :(");
+                Debug.LogError("no planes? D:");
                 enabled = false;
                 return;
             }
@@ -128,7 +128,8 @@ public class gamemanager : MonoBehaviour
             resetProblemSpots();
             setupRound();
             currentPlane.pmp.resetPlane();
-            yield return currentPlane.pmp.arrive();
+            StartCoroutine(currentPlane.pmp.arrive()); //'yield return' forces gameloop to wait until the method is done, 'startcoroutine' doesn't, so i can just start this coroutine, wait a second, then play ttog
+            yield return new WaitForSeconds(1);
             yield return ttog();
             yield return inspection();
             roundActive = false;
@@ -141,6 +142,20 @@ public class gamemanager : MonoBehaviour
             if (endAnim != null) yield return endAnim.playAnimation(crashedThisRound);
             else Debug.LogWarning($"no planeEndAnimation on {currentPlane.name}? D:");
             currentPlane.gameObject.SetActive(false);
+            if (crashedThisRound)
+            {
+                // handle other game over logic here if need be
+                results.text = "Game Over!!! D:";
+                results.CrossFadeAlpha(0, 0, false);
+                results.gameObject.SetActive(true);
+                results.CrossFadeAlpha(1, 1, false);
+                yield return new WaitForSeconds(4); 
+                // if you want to add fade-in (or fade-out) to other text, make sure the gameObject is active, then just call CrossFadeAlpha on it (first num is opacity, second num is how long it should take, and just leave the boolean as false)
+                results.text = "";
+                results.gameObject.SetActive(false);
+                SceneManager.LoadScene("mainMenu");
+                yield break;
+            }
             yield return new WaitForSeconds(1);
         }
         if (coop) results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
@@ -167,7 +182,7 @@ public class gamemanager : MonoBehaviour
         }
         if (availablePlanes.Count == 0)
         {
-            Debug.LogError("no planes? :(");
+            Debug.LogError("no planes? D:");
             return;
         }
         currentPlane = availablePlanes[roundNumber - 1];
@@ -204,7 +219,7 @@ public class gamemanager : MonoBehaviour
             attemptsP1 = 0;
             attemptsP2 = 0;
             updateAttemptsLeft();
-            Debug.LogWarning("no problemSpots on this plane? :(");
+            Debug.LogWarning("no problemSpots on this plane? D:");
             return;
         }
         for (int i = 0; i < shuffledSpots.Count; i++)   //shuffles the order of problem spots so a random one can be picked below
