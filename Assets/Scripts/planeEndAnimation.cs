@@ -86,7 +86,7 @@ public class planeEndAnimation : MonoBehaviour
         ParticleSystem smoke = Instantiate(smokePrefab, spawnPos, smokePrefab.transform.rotation);
         smoke.Play();
         audioSource.Stop();
-        crashSource.PlayOneShot(CrashBoom, 1f);
+        crashSource.PlayOneShot(CrashBoom, 0.69f);
         crashSource.PlayOneShot(CrashCrunch, 1f);
         float lifetime = smoke.main.duration + smoke.main.startLifetime.constantMax;
         Destroy(smoke.gameObject, lifetime);

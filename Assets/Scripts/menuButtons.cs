@@ -18,7 +18,7 @@ public class menuButtons : MonoBehaviour
             return;
         }
         mode = g.coop ? 2 : 1;
-        coopLabel.text = $"{mode} Play";
+        coopLabel.text = g.coop ? $"{mode} Players" : $"{mode} Player";
     }
     public void Update()
     {
@@ -44,7 +44,7 @@ public class menuButtons : MonoBehaviour
     private void updateModeLabel()
     {
         mode = g.coop ? 2 : 1;
-        coopLabel.text = $"{mode} Play";
+        coopLabel.text = g.coop ? $"{mode} Players" : $"{mode} Player";
         Debug.Log($"coop is {g.coop}");
     }
 

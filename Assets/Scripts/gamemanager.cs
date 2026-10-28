@@ -1,11 +1,8 @@
-using NUnit.Framework.Constraints;
 using System.Collections;
-using System.Threading;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using static UnityEditorInternal.ReorderableList;
 
 public class gamemanager : MonoBehaviour
 {
@@ -33,6 +30,7 @@ public class gamemanager : MonoBehaviour
     public AudioClip VictoryFanfare;
     public AudioClip FailureFanfare;
     public AudioClip stageClear;
+    public AudioClip stageFail;
 
     private void Awake()
     {
@@ -87,6 +85,7 @@ public class gamemanager : MonoBehaviour
         VictoryFanfare = refs.VictoryFanfare;
         FailureFanfare = refs.FailureFanfare;
         stageClear = refs.stageClear;
+        stageFail = refs.stageFail;
         foreach (planeProperties plane in planes)
         {
             if (plane != null) plane.gameObject.SetActive(false);
@@ -110,7 +109,7 @@ public class gamemanager : MonoBehaviour
             problemsLeftP2.text = "";
             if (planes.Length == 0)
             {
-                Debug.LogError("no planes? D:");
+                Debug.LogWarning("no planes? D:");
                 enabled = false;
                 return;
             }
@@ -148,6 +147,7 @@ public class gamemanager : MonoBehaviour
             {
                 // handle other game over logic here if need be
                 results.text = "Game Over!!! D:";
+                audioSourceCamera.PlayOneShot(FailureFanfare, 2);
                 results.CrossFadeAlpha(1, 0, false);
                 results.gameObject.SetActive(true);
                 results.CrossFadeAlpha(1, 1, false);
@@ -174,7 +174,7 @@ public class gamemanager : MonoBehaviour
         }
         if (availablePlanes.Count == 0)
         {
-            Debug.LogError("no planes? D:");
+            Debug.LogError("no planes in availablePlanes? D:");
             return;
         }
         currentPlane = availablePlanes[roundNumber - 1];
@@ -311,8 +311,7 @@ public class gamemanager : MonoBehaviour
             else results.text = $"Player 1's score: {scoreP1} pts\n" + $"Player 2's score: {scoreP2} pts";
         }
         results.gameObject.SetActive(true);
-        // todo: change this to the stagefail sound effect, and then see line 354
-        if (shouldCrash) audioSourceCamera.PlayOneShot(FailureFanfare, 2); //plays failure fanfare if the plane's gonna crash.
+        if (shouldCrash) audioSourceCamera.PlayOneShot(stageFail, 1.4f); //plays failure fanfare if the plane's gonna crash.
         else audioSourceCamera.PlayOneShot(stageClear, 2);
     return shouldCrash;
     }
@@ -352,12 +351,12 @@ public class gamemanager : MonoBehaviour
         if (coop) results.text = $"Player 1's final score: {scoreP1} pts\n" + $"Player 2's final score: {scoreP2} pts";
         else results.text = $"Player 1's final score: {scoreP1} pts";
         if (!crashedThisRound) audioSourceCamera.PlayOneShot(VictoryFanfare, 2f);
-        //todo: add else, see line 314
         results.gameObject.SetActive(true);
         yield return new WaitForSeconds(buffer);
         results.gameObject.SetActive(false);
         scoreP1 = 0;
         scoreP2 = 0;
+        StopAllCoroutines();
         SceneManager.LoadScene("mainMenu");
     }
 }

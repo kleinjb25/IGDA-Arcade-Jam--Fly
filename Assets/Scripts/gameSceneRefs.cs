@@ -16,4 +16,5 @@ public class gameSceneRefs : MonoBehaviour
     public AudioClip VictoryFanfare;
     public AudioClip FailureFanfare;
     public AudioClip stageClear;
+    public AudioClip stageFail;
 }
