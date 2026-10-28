@@ -34,6 +34,11 @@ public class menuButtons : MonoBehaviour
             g.coop = true;
             updateModeLabel();
         }
+
+        if (Keyboard.current.f1Key.wasPressedThisFrame || Keyboard.current.f6Key.wasPressedThisFrame || Keyboard.current.f7Key.wasPressedThisFrame || Keyboard.current.f12Key.wasPressedThisFrame)
+        {
+            startGame();
+        }
     }
 
     private void updateModeLabel()

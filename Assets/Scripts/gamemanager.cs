@@ -148,7 +148,7 @@ public class gamemanager : MonoBehaviour
             {
                 // handle other game over logic here if need be
                 results.text = "Game Over!!! D:";
-                results.CrossFadeAlpha(0, 0, false);
+                results.CrossFadeAlpha(1, 0, false);
                 results.gameObject.SetActive(true);
                 results.CrossFadeAlpha(1, 1, false);
                 yield return new WaitForSeconds(4);
